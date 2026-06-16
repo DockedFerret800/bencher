@@ -16,12 +16,14 @@ namespace bencher
    template <class T, class... Args>
    concept invocable_not_void = std::invocable<T, Args...> && !std::is_void_v<std::invoke_result_t<T, Args...>>;
 
-   static const volatile void* volatile global_force_escape_pointer;
+#if defined(BENCH_MSVC)
+   const volatile void* volatile global_force_escape_pointer;
 
    inline void use_char_pointer(const volatile char* const v)
    {
       global_force_escape_pointer = reinterpret_cast<const volatile void*>(v);
    }
+#endif
 
 #if defined(BENCH_MSVC)
 #define BENCH_DO_NOT_OPTIMIZE(value)                                 \
