@@ -12,18 +12,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        build_type: [Debug, Release]
+        preset:
+          - configure_preset: "x64"
+            build_preset: "x64-build"
+            test_preset: "x64-test"
 
     steps:
       - uses: actions/checkout@v6
 
-      - name: Configure CMake
-        run: |
-          cmake -B build -DBUILD_TESTING=ON
-
-      - name: Build
-        run: cmake --build build --config ${{ matrix.build_type }} -j $env:NUMBER_OF_PROCESSORS
-
-      - name: Test
-        working-directory: build
-        run: ctest -C ${{ matrix.build_type }} --output-on-failure
+      - name: "Build & Test"
+        uses: lukka/run-cmake@v10
+        with:
+          configurePreset: ${{ matrix.preset.configure_preset }}
+          buildPreset: ${{ matrix.preset.build_preset }}
+          testPreset: ${{ matrix.preset.test_preset }}

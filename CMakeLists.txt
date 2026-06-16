@@ -10,7 +10,9 @@ project(
     LANGUAGES CXX
 )
 
-set(CMAKE_CXX_MODULE_STD 1)
+if(NOT CMAKE_GENERATOR MATCHES "Visual Studio")
+  set(CMAKE_CXX_MODULE_STD 1)
+endif()
 
 include(cmake/project-is-top-level.cmake)
 include(cmake/variables.cmake)
